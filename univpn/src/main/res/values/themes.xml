@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.UniVPN.TV" parent="Theme.Leanback">
+        <!-- Window / background -->
+        <item name="android:windowBackground">@color/bg</item>
+        <item name="android:colorBackground">@color/bg</item>
+
+        <!-- Accent drives Leanback focus highlight colour -->
+        <item name="colorAccent">@color/accent</item>
+        <item name="colorPrimary">@color/bg</item>
+        <item name="colorPrimaryDark">@color/surface</item>
+    </style>
+
+</resources>

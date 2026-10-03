@@ -1,0 +1,71 @@
+package com.univpn.app.data.db
+
+import android.content.Context
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
+import com.univpn.app.data.model.AppRoute
+import com.univpn.app.data.model.GeneratedProfileMeta
+import com.univpn.app.data.model.ProviderAccount
+import com.univpn.app.data.model.VpnProfile
+
+@Database(
+    entities = [AppRoute::class, VpnProfile::class, ProviderAccount::class, GeneratedProfileMeta::class],
+    version = 5,
+    exportSchema = false
+)
+abstract class AppDatabase : RoomDatabase() {
+    abstract fun appRouteDao(): AppRouteDao
+    abstract fun vpnProfileDao(): VpnProfileDao
+    abstract fun providerAccountDao(): ProviderAccountDao
+    abstract fun generatedProfileMetaDao(): GeneratedProfileMetaDao
+
+    companion object {
+        @Volatile private var instance: AppDatabase? = null
+
+        private val MIGRATION_3_4 = object : Migration(3, 4) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE app_routes ADD COLUMN isHidden INTEGER NOT NULL DEFAULT 0")
+            }
+        }
+
+        private val MIGRATION_4_5 = object : Migration(4, 5) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("""
+                    CREATE TABLE IF NOT EXISTS provider_accounts (
+                        accountId TEXT NOT NULL PRIMARY KEY,
+                        providerId TEXT NOT NULL,
+                        usernameHint TEXT NOT NULL,
+                        expiryEpochMs INTEGER
+                    )
+                """.trimIndent())
+                db.execSQL("""
+                    CREATE TABLE IF NOT EXISTS generated_profile_meta (
+                        profileId TEXT NOT NULL PRIMARY KEY,
+                        accountId TEXT NOT NULL,
+                        providerId TEXT NOT NULL,
+                        serverId TEXT NOT NULL,
+                        serverCountry TEXT NOT NULL,
+                        serverCity TEXT NOT NULL,
+                        generatedAt INTEGER NOT NULL,
+                        publicKey TEXT NOT NULL DEFAULT '',
+                        FOREIGN KEY (profileId) REFERENCES vpn_profiles(id) ON DELETE CASCADE
+                    )
+                """.trimIndent())
+            }
+        }
+
+        fun get(context: Context): AppDatabase = instance ?: synchronized(this) {
+            instance ?: Room.databaseBuilder(
+                context.applicationContext,
+                AppDatabase::class.java,
+                "univpn.db"
+            )
+                .addMigrations(MIGRATION_3_4, MIGRATION_4_5)
+                .build()
+                .also { instance = it }
+        }
+    }
+}

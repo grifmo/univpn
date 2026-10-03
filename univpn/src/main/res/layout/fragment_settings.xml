@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="24dp"
+    android:background="@color/bg">
+
+    <!-- Header -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Settings"
+        android:textSize="22sp"
+        android:fontFamily="@font/dm_sans"
+        android:textColor="@color/text_primary"
+        android:letterSpacing="-0.01"
+        android:paddingStart="8dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp" />
+
+    <!-- Hairline under header -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/surface_elevated"
+        android:alpha="0.5"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Auto-start on boot -->
+    <LinearLayout
+        android:id="@+id/rowAutoStart"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="12dp"
+        android:focusable="true"
+        android:clickable="true"
+        android:background="@drawable/tv_list_item_background">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Auto-start on boot"
+            android:textColor="@color/text_primary"
+            android:textSize="16sp"
+            android:fontFamily="@font/dm_sans" />
+
+        <TextView
+            android:id="@+id/autoStartState"
+            android:layout_width="52dp"
+            android:layout_height="28dp"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:fontFamily="@font/dm_sans"
+            android:textStyle="bold"
+            android:background="@drawable/toggle_indicator_background"
+            android:focusable="false"
+            android:clickable="false" />
+
+    </LinearLayout>
+
+    <!-- VPN status overlay -->
+    <LinearLayout
+        android:id="@+id/rowOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="12dp"
+        android:layout_marginTop="2dp"
+        android:focusable="true"
+        android:clickable="true"
+        android:background="@drawable/tv_list_item_background">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="VPN status overlay"
+            android:textColor="@color/text_primary"
+            android:textSize="16sp"
+            android:fontFamily="@font/dm_sans" />
+
+        <TextView
+            android:id="@+id/overlayState"
+            android:layout_width="52dp"
+            android:layout_height="28dp"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:fontFamily="@font/dm_sans"
+            android:textStyle="bold"
+            android:background="@drawable/toggle_indicator_background"
+            android:focusable="false"
+            android:clickable="false" />
+
+    </LinearLayout>
+
+    <!-- Overlay size (shown when overlay is ON) -->
+    <LinearLayout
+        android:id="@+id/rowOverlaySize"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="12dp"
+        android:paddingStart="28dp"
+        android:layout_marginTop="2dp"
+        android:focusable="true"
+        android:clickable="true"
+        android:visibility="gone"
+        android:background="@drawable/tv_list_item_background">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Size"
+            android:textColor="@color/text_secondary"
+            android:textSize="14sp"
+            android:fontFamily="@font/dm_sans" />
+
+        <TextView
+            android:id="@+id/overlaySizeState"
+            android:layout_width="52dp"
+            android:layout_height="28dp"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:fontFamily="@font/dm_sans"
+            android:textStyle="bold"
+            android:background="@drawable/toggle_indicator_background"
+            android:focusable="false"
+            android:clickable="false" />
+
+    </LinearLayout>
+
+    <!-- Overlay position (shown when overlay is ON) -->
+    <LinearLayout
+        android:id="@+id/rowOverlayPosition"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="12dp"
+        android:paddingStart="28dp"
+        android:layout_marginTop="2dp"
+        android:focusable="true"
+        android:clickable="true"
+        android:visibility="gone"
+        android:background="@drawable/tv_list_item_background">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Position"
+            android:textColor="@color/text_secondary"
+            android:textSize="14sp"
+            android:fontFamily="@font/dm_sans" />
+
+        <TextView
+            android:id="@+id/overlayPositionState"
+            android:layout_width="64dp"
+            android:layout_height="28dp"
+            android:gravity="center"
+            android:textSize="11sp"
+            android:fontFamily="@font/dm_sans"
+            android:textStyle="bold"
+            android:background="@drawable/toggle_indicator_background"
+            android:focusable="false"
+            android:clickable="false" />
+
+    </LinearLayout>
+
+</LinearLayout>

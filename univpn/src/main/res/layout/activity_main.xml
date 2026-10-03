@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="48dp"
+    android:background="#1a1a1a">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="UniVPN"
+        android:textSize="36sp"
+        android:textColor="#ffffff"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:id="@+id/statusText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Service starting..."
+        android:textSize="18sp"
+        android:textColor="#aaaaaa"
+        android:layout_marginBottom="48dp" />
+
+    <Button
+        android:id="@+id/configureButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Configure App Routes"
+        android:textSize="18sp"
+        android:paddingHorizontal="32dp"
+        android:paddingVertical="12dp"
+        android:focusable="true" />
+
+    <Button
+        android:id="@+id/profilesButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Manage VPN Profiles"
+        android:textSize="18sp"
+        android:paddingHorizontal="32dp"
+        android:paddingVertical="12dp"
+        android:layout_marginTop="16dp"
+        android:focusable="true" />
+
+    <Button
+        android:id="@+id/providersButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="VPN Providers"
+        android:textSize="18sp"
+        android:paddingHorizontal="32dp"
+        android:paddingVertical="12dp"
+        android:layout_marginTop="16dp"
+        android:focusable="true" />
+
+    <Button
+        android:id="@+id/autoStartButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Auto-start: OFF"
+        android:textSize="14sp"
+        android:paddingHorizontal="24dp"
+        android:paddingVertical="8dp"
+        android:layout_marginTop="16dp"
+        android:focusable="true" />
+
+    <Button
+        android:id="@+id/overlayButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Debug Overlay: OFF"
+        android:textSize="14sp"
+        android:paddingHorizontal="24dp"
+        android:paddingVertical="8dp"
+        android:layout_marginTop="32dp"
+        android:focusable="true" />
+
+</LinearLayout>

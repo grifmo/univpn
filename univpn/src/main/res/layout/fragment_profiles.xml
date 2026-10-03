@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg">
+
+    <Button
+        android:id="@+id/importButton"
+        android:layout_width="wrap_content"
+        android:minWidth="320dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="20dp"
+        android:text="Scan for Configs"
+        android:textColor="@color/text_secondary"
+        android:textSize="13sp"
+        android:fontFamily="@font/jetbrains_mono"
+        android:textAllCaps="true"
+        android:letterSpacing="0.04"
+        android:padding="14dp"
+        android:background="@drawable/tv_button_background"
+        android:focusable="true" />
+
+    <Button
+        android:id="@+id/providersButton"
+        android:layout_width="wrap_content"
+        android:minWidth="320dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="4dp"
+        android:text="VPN Providers"
+        android:textColor="@color/text_secondary"
+        android:textSize="13sp"
+        android:fontFamily="@font/jetbrains_mono"
+        android:textAllCaps="true"
+        android:letterSpacing="0.04"
+        android:padding="14dp"
+        android:background="@drawable/tv_button_background"
+        android:focusable="true" />
+
+    <!-- Web import banner — shown when server is running -->
+    <LinearLayout
+        android:id="@+id/serverBanner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/banner_background"
+        android:padding="14dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="12dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Web import active — open in browser on your network:"
+            android:textColor="@color/accent"
+            android:textSize="12sp"
+            android:fontFamily="@font/jetbrains_mono" />
+
+        <TextView
+            android:id="@+id/serverUrl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_primary"
+            android:textSize="13sp"
+            android:fontFamily="@font/jetbrains_mono"
+            android:layout_marginTop="4dp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/emptyText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="No profiles yet. Scan for WireGuard configs or connect a VPN provider."
+        android:textSize="13sp"
+        android:fontFamily="@font/jetbrains_mono"
+        android:textColor="@color/text_secondary"
+        android:paddingHorizontal="24dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="8dp"
+        android:visibility="gone" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingHorizontal="24dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="24dp" />
+
+</LinearLayout>

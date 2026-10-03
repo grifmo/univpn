@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#CC000000"
+    android:padding="10dp"
+    android:minWidth="160dp">
+
+    <TextView
+        android:id="@+id/overlayProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#00FF88"
+        android:textSize="13sp"
+        android:fontFamily="@font/jetbrains_mono"
+        android:text="● None" />
+
+    <TextView
+        android:id="@+id/overlayVirtualIp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#AAAAAA"
+        android:textSize="12sp"
+        android:fontFamily="@font/jetbrains_mono"
+        android:layout_marginTop="2dp"
+        android:text="VPN: —" />
+
+    <TextView
+        android:id="@+id/overlayExternalIp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#AAAAAA"
+        android:textSize="12sp"
+        android:fontFamily="@font/jetbrains_mono"
+        android:layout_marginTop="1dp"
+        android:text="EXT: —" />
+
+    <TextView
+        android:id="@+id/overlayLatency"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#888888"
+        android:textSize="12sp"
+        android:fontFamily="@font/jetbrains_mono"
+        android:layout_marginTop="4dp"
+        android:text="RTT: —" />
+
+    <TextView
+        android:id="@+id/overlayThroughput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#CCCCCC"
+        android:textSize="12sp"
+        android:fontFamily="@font/jetbrains_mono"
+        android:layout_marginTop="1dp"
+        android:text="↑ — ↓ —" />
+
+    <TextView
+        android:id="@+id/overlaySession"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#888888"
+        android:textSize="11sp"
+        android:fontFamily="@font/jetbrains_mono"
+        android:layout_marginTop="1dp"
+        android:text="↑ — ↓ — (session)" />
+
+</LinearLayout>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="16dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="App Routes"
+            android:textSize="22sp"
+            android:fontFamily="@font/dm_sans"
+            android:textColor="@color/text_primary"
+            android:letterSpacing="-0.01" />
+
+        <Button
+            android:id="@+id/toggleSystem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text="Show hidden apps"
+            android:textColor="@color/text_secondary"
+            android:textSize="11sp"
+            android:fontFamily="@font/jetbrains_mono"
+            android:letterSpacing="0.04"
+            android:textAllCaps="true"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:background="@drawable/tv_button_background"
+            android:focusable="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="OK · assign route"
+            android:textSize="11sp"
+            android:fontFamily="@font/jetbrains_mono"
+            android:textColor="@color/text_tertiary"
+            android:letterSpacing="0.02" />
+
+    </LinearLayout>
+
+    <!-- Hairline separator under header -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/surface_elevated"
+        android:alpha="0.4" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="24dp" />
+
+</LinearLayout>

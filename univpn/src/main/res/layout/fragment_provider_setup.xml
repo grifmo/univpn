@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1a1a1a">
+
+    <!-- Credential entry -->
+    <LinearLayout
+        android:id="@+id/viewCredentials"
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:padding="32dp">
+
+        <TextView
+            android:id="@+id/providerTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="22sp"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            android:layout_marginBottom="24dp" />
+
+        <TextView
+            android:id="@+id/errorBanner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:textSize="14sp"
+            android:textColor="#ff5555"
+            android:background="#33ff0000"
+            android:visibility="gone"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Dynamic credential fields added programmatically -->
+        <LinearLayout
+            android:id="@+id/credentialFields"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <Button
+            android:id="@+id/btnConnect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Connect"
+            android:layout_marginTop="24dp"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/btnNoAccount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Don't have an account?"
+            android:textSize="13sp"
+            android:textColor="#00ff88"
+            android:layout_marginTop="16dp"
+            android:layout_gravity="center_horizontal"
+            android:focusable="true"
+            android:clickable="true"
+            android:padding="8dp" />
+
+    </LinearLayout>
+
+    <!-- Loading spinner -->
+    <LinearLayout
+        android:id="@+id/viewLoading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="64dp"
+            android:layout_height="64dp" />
+
+        <TextView
+            android:id="@+id/loadingText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fetching servers…"
+            android:textSize="16sp"
+            android:textColor="#888888"
+            android:layout_marginTop="16dp" />
+
+    </LinearLayout>
+
+    <!-- Server picker -->
+    <LinearLayout
+        android:id="@+id/viewServerPicker"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/serverPickerTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textColor="#ffffff"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Warning banner -->
+        <TextView
+            android:id="@+id/warningBanner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textSize="13sp"
+            android:textColor="#ffcc00"
+            android:background="#33ffcc00"
+            android:visibility="gone"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/noServersText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No servers available. Check your account status."
+            android:textSize="14sp"
+            android:textColor="#888888"
+            android:gravity="center"
+            android:padding="32dp"
+            android:visibility="gone" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Choose by country"
+            android:textSize="14sp"
+            android:textColor="#888888"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Level 1: country list -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/countryRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <!-- Level 2: servers within a country (hidden until country selected) -->
+        <LinearLayout
+            android:id="@+id/serverDrillDown"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/drillDownCountryLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="#888888"
+                android:paddingBottom="8dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/serverRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Success -->
+    <LinearLayout
+        android:id="@+id/viewSuccess"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="32dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Configuration created"
+            android:textSize="22sp"
+            android:textColor="#00ff88"
+            android:textStyle="bold"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
+            android:id="@+id/successDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="#cccccc"
+            android:gravity="center"
+            android:layout_marginBottom="24dp" />
+
+        <Button
+            android:id="@+id/btnViewProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="View Profile"
+            android:focusable="true" />
+
+    </LinearLayout>
+
+    <!-- QR code modal (shown over everything) -->
+    <LinearLayout
+        android:id="@+id/viewQr"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="#e01a1a1a"
+        android:visibility="gone"
+        android:focusable="true">
+
+        <ImageView
+            android:id="@+id/qrImage"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:scaleType="fitCenter" />
+
+        <TextView
+            android:id="@+id/qrHint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="#cccccc"
+            android:gravity="center"
+            android:layout_marginTop="16dp" />
+
+        <Button
+            android:id="@+id/btnQrDismiss"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Close"
+            android:layout_marginTop="16dp"
+            android:focusable="true" />
+
+    </LinearLayout>
+
+</FrameLayout>

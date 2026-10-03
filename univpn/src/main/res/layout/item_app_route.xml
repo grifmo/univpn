@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:layout_marginBottom="2dp"
+    android:focusable="false"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <!-- Main tappable area: icon + name + badge -->
+    <LinearLayout
+        android:id="@+id/mainArea"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
+        android:layout_weight="1"
+        android:background="@drawable/tv_list_item_background"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp">
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="12dp"
+            android:scaleType="fitCenter" />
+
+        <TextView
+            android:id="@+id/appName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:fontFamily="@font/dm_sans"
+            android:maxLines="1"
+            android:textColor="@color/text_primary"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/profileBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:fontFamily="@font/jetbrains_mono"
+            android:textColor="@color/text_secondary"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+    <!-- Hide/show toggle button -->
+    <ImageButton
+        android:id="@+id/hideButton"
+        android:layout_width="56dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
+        android:background="@drawable/tv_list_item_background"
+        android:contentDescription="Toggle visibility"
+        android:focusable="true"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:scaleType="center"
+        android:src="@drawable/ic_visibility" />
+
+</LinearLayout>

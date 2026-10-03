@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Surfaces -->
+    <color name="bg">#111318</color>
+    <color name="surface">#1A1D24</color>
+    <color name="surface_focused">#21252E</color>
+    <color name="surface_elevated">#2A2F3B</color>
+
+    <!-- Text -->
+    <color name="text_primary">#F1F2F5</color>
+    <color name="text_secondary">#5B6270</color>
+    <color name="text_tertiary">#3D4250</color>
+
+    <!-- Accent (#22C9B0 at various opacities) -->
+    <color name="accent">#22C9B0</color>
+    <color name="accent_bg">#1422C9B0</color>    <!-- 8%  — nav item active bg -->
+    <color name="accent_dim">#1F22C9B0</color>   <!-- 12% — status chip bg -->
+    <color name="accent_border">#4D22C9B0</color> <!-- 30% -->
+    <color name="accent_focus">#5922C9B0</color>  <!-- 35% — focus ring stroke -->
+
+    <!-- Status chip text colours (latency thresholds) -->
+    <color name="latency_good">#22C9B0</color>    <!-- &lt; 50ms  -->
+    <color name="latency_warn">#F59E0B</color>    <!-- 50–150ms -->
+    <color name="latency_bad">#EF4444</color>     <!-- &gt; 150ms -->
+</resources>

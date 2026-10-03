@@ -1,0 +1,133 @@
+# UniVPN
+
+**Automatic per-app VPN switching for Android TV.**
+
+Pick a VPN location for each app once (BBC iPlayer → UK, Netflix → US, YouTube → no VPN), and
+UniVPN switches the WireGuard tunnel whenever that app comes to the foreground. No more
+opening a VPN app and changing servers every time you change what you're watching.
+
+Built for and tested on the NVIDIA Shield TV. It targets Android TV devices running
+Android 6.0 or later; the UI is designed for a D-pad remote.
+
+## Features
+
+- **Per-app routing.** Each app gets a route:
+  - **a VPN profile**: switch to that tunnel when the app opens
+  - **No VPN**: drop the tunnel
+  - **Passthrough**: keep whatever tunnel is already up (useful for launchers, keyboards, settings)
+- **Sensible defaults.** New streaming/audio apps start on *No VPN* and everything else on
+  *Passthrough*, so the tunnel isn't torn down every time you visit the home screen.
+- **Provider accounts.** Sign in with **Mullvad** or **Private Internet Access** and UniVPN
+  generates WireGuard configs for the servers you choose. Configs older than 7 days are
+  refreshed automatically.
+- **Any WireGuard config.** Import `.conf` files from any WireGuard provider or your own server.
+- **Web import.** No typing passwords with a remote: open the Profiles screen and UniVPN
+  shows an address (e.g. `http://192.168.1.20:8080`) you can visit from a phone or laptop
+  on the same network to upload configs or enter provider credentials.
+- **Status overlay.** Optional on-screen chip showing the active profile and latency,
+  toggleable from the notification.
+- **Survives reboots and standby.** Optional start on boot; routing resumes when the
+  device wakes up.
+
+## How it works
+
+`VpnSwitcherService` polls `UsageStatsManager` for foreground app changes. When the
+foreground app's route needs a different tunnel, it tears down the current WireGuard
+tunnel and brings up the new one using the official WireGuard Go backend.
+
+Things to know:
+
+- **The tunnel is device-wide.** Android allows one VPN at a time, so while an app is in the
+  foreground, *all* traffic on the device, including background apps, uses that app's route.
+- **There is no kill switch.** While one tunnel is going down and the next is coming up,
+  traffic can briefly leave without a VPN. Don't rely on UniVPN where that matters.
+
+## Install
+
+There is no Play Store release yet. Build the APK (see [Build](#build)), then sideload it:
+
+```sh
+adb connect <device-ip>:5555          # or connect over USB
+adb install univpn-debug.apk
+```
+
+### Grant permissions
+
+UniVPN needs **usage access** to see which app is in the foreground. Android TV often hides
+this setting, so grant it with ADB:
+
+```sh
+adb shell appops set com.univpn.app GET_USAGE_STATS allow
+```
+
+On the Shield you can also use *Settings → Device Preferences → Security & restrictions →
+Usage access*. For the optional status overlay:
+
+```sh
+adb shell appops set com.univpn.app SYSTEM_ALERT_WINDOW allow
+```
+
+On first launch Android asks you to approve UniVPN as a VPN. Accept it.
+
+## Quick start
+
+1. Open **Profiles**. Add a provider account, or note the web import address and upload a
+   WireGuard `.conf` from another device.
+2. Open **App Routes**, select an app, and pick the profile it should use.
+3. Launch that app. The tunnel switches automatically.
+
+## Build
+
+Requirements: the Android SDK (platform 34) and an internet connection. Gradle downloads
+the JDKs it needs (21 for the daemon, 17 for compilation) if you don't have them.
+
+```sh
+# Point Gradle at your SDK, either via ANDROID_HOME or local.properties:
+echo "sdk.dir=/path/to/Android/sdk" > local.properties
+
+./gradlew :univpn:assembleDebug
+# → univpn/build/outputs/apk/debug/univpn-debug.apk
+```
+
+Instrumented tests (needs a connected device or emulator):
+
+```sh
+./gradlew :univpn:connectedDebugAndroidTest
+```
+
+## Project layout
+
+```
+univpn/src/main/kotlin/com/univpn/app/
+├── service/    VpnSwitcherService (foreground watcher + tunnel switching), status overlay
+├── tunnel/     TunnelManager interface, WireGuard implementation
+├── provider/   Mullvad / PIA connectors, credential store, config freshness
+├── data/       Room database, app routes, default-route seeding
+├── server/     LAN web import server (NanoHTTPD)
+├── receiver/   Boot, package-removed, overlay toggle
+└── ui/         Leanback TV UI
+```
+
+UI design notes and the visual design system live in [docs/DESIGN.md](docs/DESIGN.md).
+
+## Roadmap
+
+- Encrypt stored WireGuard private keys (SQLCipher)
+- Certificate pinning for provider APIs
+- More providers (NordVPN connector exists but is disabled; Surfshark)
+- Play Store release
+
+Contributions are welcome. Please open an issue to discuss larger changes first.
+
+## Security
+
+See [SECURITY.md](SECURITY.md) for known limitations and how to report vulnerabilities.
+
+## Licence
+
+UniVPN is free software, released under the [GNU General Public License v3.0](LICENSE).
+Bundled fonts and other third-party components are listed in
+[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+
+UniVPN is not affiliated with WireGuard, Mullvad, Private Internet Access or NVIDIA.
+WireGuard is a registered trademark of Jason A. Donenfeld.

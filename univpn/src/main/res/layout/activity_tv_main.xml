@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg">
+
+    <!-- ─── Two-panel layout ─── -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <!-- ─── Nav sidebar (220dp) ─── -->
+        <LinearLayout
+            android:layout_width="220dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@color/surface"
+            android:paddingTop="32dp">
+
+            <!-- Logo: "Uni" + "VPN" in accent -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingStart="24dp"
+                android:paddingBottom="32dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Uni"
+                    android:textSize="20sp"
+                    android:fontFamily="@font/dm_sans"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_primary"
+                    android:letterSpacing="-0.02" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="VPN"
+                    android:textSize="20sp"
+                    android:fontFamily="@font/dm_sans"
+                    android:textStyle="bold"
+                    android:textColor="@color/accent"
+                    android:letterSpacing="-0.02" />
+
+            </LinearLayout>
+
+            <!-- App Routes -->
+            <TextView
+                android:id="@+id/navAppRoutes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="App Routes"
+                android:textSize="15sp"
+                android:fontFamily="@font/dm_sans"
+                android:textColor="@color/text_secondary"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:focusable="true"
+                android:clickable="true"
+                android:background="@drawable/nav_item_background" />
+
+            <!-- Profiles -->
+            <TextView
+                android:id="@+id/navProfiles"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Profiles"
+                android:textSize="15sp"
+                android:fontFamily="@font/dm_sans"
+                android:textColor="@color/text_secondary"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:focusable="true"
+                android:clickable="true"
+                android:background="@drawable/nav_item_background" />
+
+            <!-- Settings -->
+            <TextView
+                android:id="@+id/navSettings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Settings"
+                android:textSize="15sp"
+                android:fontFamily="@font/dm_sans"
+                android:textColor="@color/text_secondary"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:focusable="true"
+                android:clickable="true"
+                android:background="@drawable/nav_item_background" />
+
+        </LinearLayout>
+
+        <!-- ─── Sidebar/content separator ─── -->
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/surface_elevated"
+            android:alpha="0.25" />
+
+        <!-- ─── Content area ─── -->
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/contentContainer"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+    <!-- ─── Status chip — overlaid top-right ─── -->
+    <TextView
+        android:id="@+id/switchingChip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_margin="16dp"
+        android:text="⟳ Switching…"
+        android:textColor="@color/accent"
+        android:textSize="11sp"
+        android:fontFamily="@font/jetbrains_mono"
+        android:background="@drawable/status_chip_background"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:focusable="false"
+        android:visibility="gone" />
+
+</FrameLayout>
