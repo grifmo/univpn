@@ -44,12 +44,34 @@ Things to know:
 
 ## Install
 
-There is no Play Store release yet. Build the APK (see [Build](#build)), then sideload it:
+There is no Play Store release yet. Download the latest APK from
+[Releases](https://github.com/grifmo/univpn/releases) (or [build it yourself](#build)),
+then sideload it:
 
 ```sh
 adb connect <device-ip>:5555          # or connect over USB
-adb install univpn-debug.apk
+adb install univpn-<version>.apk
 ```
+
+To get updates automatically, add `https://github.com/grifmo/univpn` to
+[Obtainium](https://github.com/ImranR98/Obtainium).
+
+### Verifying downloads
+
+Every release APK is signed with the same key. Its certificate's SHA-256 fingerprint is:
+
+```
+60:3B:11:16:39:BC:93:88:C2:EB:AC:2B:4D:6B:4C:BB:1E:8F:E7:86:1D:6C:E4:78:C3:0C:05:7D:15:6D:52:5D
+```
+
+Check an APK with `apksigner` from the Android SDK build-tools:
+
+```sh
+apksigner verify --print-certs univpn-<version>.apk
+# Signer #1 certificate SHA-256 digest: 603b111639bc9388c2ebac2b4d6b4cbb1e8fe7861d6ce478c30c057d156d525d
+```
+
+Each release also includes `SHA256SUMS.txt` for checking the download itself.
 
 ### Grant permissions
 
