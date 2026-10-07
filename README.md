@@ -147,7 +147,14 @@ See [SECURITY.md](SECURITY.md) for known limitations and how to report vulnerabi
 
 ## Licence
 
-UniVPN is free software, released under the [GNU General Public License v3.0](LICENSE).
+UniVPN is free software: you can redistribute it and/or modify it under the terms of the
+[GNU General Public License](LICENSE) as published by the Free Software Foundation, either
+version 3 of the License, or (at your option) any later version (SPDX: `GPL-3.0-or-later`).
+
+UniVPN is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
 Bundled fonts and other third-party components are listed in
 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 

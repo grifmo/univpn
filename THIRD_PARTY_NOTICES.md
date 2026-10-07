@@ -1,6 +1,6 @@
 # Third-party notices
 
-UniVPN is licensed under the GNU General Public License v3.0 (see [LICENSE](LICENSE)).
+UniVPN is licensed under the GNU General Public License, version 3 or (at your option) any later version (`GPL-3.0-or-later`; see [LICENSE](LICENSE)).
 It bundles or links the following third-party components, each under its own licence.
 
 ## Bundled in the source tree
