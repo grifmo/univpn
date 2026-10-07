@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v5
 
@@ -27,7 +27,7 @@ jobs:
       - name: Unit tests
         run: ./gradlew :univpn:testDebugUnitTest
 
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v6
         with:
           name: univpn-debug-apk
           path: univpn/build/outputs/apk/debug/*.apk
