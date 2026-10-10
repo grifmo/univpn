@@ -76,10 +76,18 @@ class TvMainActivity : FragmentActivity() {
                 combine(
                     VpnSwitcherService.switchingFlow,
                     VpnSwitcherService.profileFlow,
+                    VpnSwitcherService.failedProfileFlow,
                     DebugState.latencyFlow,
-                ) { switching, profileName, latencyMs -> Triple(switching, profileName, latencyMs) }
-                    .collect { (switching, profileName, latencyMs) ->
+                ) { switching, profileName, failedName, latencyMs -> ChipState(switching, profileName, failedName, latencyMs) }
+                    .collect { (switching, profileName, failedName, latencyMs) ->
                         when {
+                            // A failed profile stays flagged while retries run, so the warning
+                            // doesn't flicker back to "Switching…" on every attempt.
+                            failedName != null -> {
+                                switchingChip.text = "⚠ $failedName — not connected"
+                                switchingChip.setTextColor(ContextCompat.getColor(this@TvMainActivity, R.color.latency_bad))
+                                switchingChip.visibility = View.VISIBLE
+                            }
                             switching -> {
                                 switchingChip.text = "⟳ Switching…"
                                 switchingChip.setTextColor(ContextCompat.getColor(this@TvMainActivity, R.color.latency_good))
@@ -167,6 +175,13 @@ class TvMainActivity : FragmentActivity() {
         )
         return mode == AppOpsManager.MODE_ALLOWED
     }
+
+    private data class ChipState(
+        val switching: Boolean,
+        val profileName: String?,
+        val failedName: String?,
+        val latencyMs: Int,
+    )
 
     companion object {
         private const val TAG = "UniVPN_TV"

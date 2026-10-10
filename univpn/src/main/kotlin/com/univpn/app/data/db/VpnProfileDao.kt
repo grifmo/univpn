@@ -15,6 +15,10 @@ interface VpnProfileDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(profile: VpnProfile)
 
+    /** Returns the number of rows updated: 0 if the profile no longer exists. */
+    @Update
+    suspend fun update(profile: VpnProfile): Int
+
     @Delete
     suspend fun delete(profile: VpnProfile)
 }
