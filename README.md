@@ -162,11 +162,13 @@ WireGuard is a registered trademark of Jason A. Donenfeld.
 
 ## Known issues (v0.9.x)
 
+**Fixed in [v0.9.2](https://github.com/grifmo/univpn/releases/tag/v0.9.2). Please update.**
+
+v0.9.0 and v0.9.1 had two serious bugs:
+
 - **Mullvad profiles generated in the app stop working after 7 days.** The automatic refresh writes a server address that can't be resolved, so the tunnel fails to start.
 - **A failed connection still shows the profile as active.** If a tunnel can't start, UniVPN keeps displaying the profile as active and doesn't retry. Traffic then leaves the device unprotected.
 
-Together, these mean a Mullvad profile can look connected after a week while nothing is protected.
+Together, these mean a Mullvad profile can look connected after a week while nothing is protected. v0.9.2 repairs affected Mullvad profiles automatically.
 
-**Workaround:** Download a WireGuard `.conf` from your Mullvad account and import it instead of generating the profile in UniVPN. Imported configs are never refreshed. With any provider, check your IP address after switching apps if it matters. The optional overlay is helpful for this - showing as it does the currently selected profile and the external IP address assigned.
-
-Other open issues from a community review (undetected tunnel drops, the 10-second recovery window, the "Default" route disconnecting, and the unauthenticated import server) are tracked for upcoming releases.
+v0.9.2 also fixes the other findings from a community review, tracked in [Issues](https://github.com/grifmo/univpn/issues?q=is%3Aissue): undetected tunnel drops, the 10-second recovery window, the "Default" route disconnecting, the unauthenticated import server, and private keys stored in plain text.
