@@ -124,7 +124,9 @@ class DebugOverlayService : Service() {
                 }
             }
 
+            val failed = VpnSwitcherService.failedProfileFlow.value
             val profileLine = when {
+                failed != null                      -> "⚠ $failed — NOT CONNECTED"
                 DebugState.profileType.isNotEmpty() -> "● ${DebugState.profileName} (${DebugState.profileType})"
                 DebugState.profileName != "None"    -> "● ${DebugState.profileName}"
                 else                                -> "○ No VPN"

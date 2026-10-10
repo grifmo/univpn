@@ -191,12 +191,11 @@ class ServiceRecoveryTest {
     }
 
     @Test
-    fun serviceDead_unmappedUserApp_implicitNoVpn_tunnelDropped() = runBlocking {
-        // User app with no DB entry and not a system app → route == null, not system.
-        // onAppForeground falls through to targetProfile = null → tunnel stopped.
+    fun serviceDead_unmappedUserApp_keepsCurrentTunnel() = runBlocking {
+        // An app with no route ("Default (keep current tunnel)", or installed after the
+        // seeder last ran) keeps whatever tunnel is up instead of dropping it (#5).
         val route = db.appRouteDao().getByPackage("com.some.newapp")
         assertNull(route)
-        // No route + not system app → targetProfile = null → tunnel will be dropped.
-        // This is the implicit NoVPN behaviour for unmapped user apps.
+        assertEquals(RouteDecision.Keep, decideRoute(route))
     }
 }

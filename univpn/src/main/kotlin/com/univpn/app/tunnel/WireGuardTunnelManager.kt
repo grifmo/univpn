@@ -10,21 +10,35 @@ import com.wireguard.config.Config
 import kotlinx.coroutines.*
 import kotlin.coroutines.coroutineContext
 
-class WireGuardTunnelManager : TunnelManager {
+/**
+ * @param onUnexpectedDown called when the backend takes the tunnel down without us asking,
+ *   e.g. when another VPN app takes over and GoBackend's VpnService is destroyed.
+ */
+class WireGuardTunnelManager(
+    private val onUnexpectedDown: (() -> Unit)? = null
+) : TunnelManager {
 
     private var backend: GoBackend? = null
     private var activeTunnel: WgTunnel? = null
     private var pollScope: CoroutineScope? = null
+    @Volatile private var stopping = false
 
     override suspend fun start(profile: VpnProfile, service: VpnService) {
         withContext(Dispatchers.IO) {
-            val be = GoBackend(service).also { backend = it }
+            val be = GoBackend(service)
             val config = Config.parse(profile.configContent.reader().buffered())
-            val tunnel = WgTunnel(profile.name).also { activeTunnel = it }
+            val tunnel = WgTunnel(profile.name) { t ->
+                if (!stopping && t === activeTunnel) {
+                    Log.w(TAG, "WireGuard ${profile.name} went down unexpectedly")
+                    onUnexpectedDown?.invoke()
+                }
+            }
             be.setState(tunnel, Tunnel.State.UP, config)
+            backend = be
+            activeTunnel = tunnel
             Log.i(TAG, "WireGuard tunnel up: ${profile.name}")
 
-            val peerHost = parsePeerEndpointHost(profile.configContent)
+            val peerHost = WgConfig.endpointHost(profile.configContent)
 
             pollScope?.cancel()
             pollScope = CoroutineScope(SupervisorJob() + Dispatchers.IO).also { scope ->
@@ -35,19 +49,31 @@ class WireGuardTunnelManager : TunnelManager {
 
     override suspend fun stop() {
         withContext(Dispatchers.IO) {
-            pollScope?.cancel()
-            pollScope = null
-            activeTunnel?.let { t ->
-                runCatching { backend?.setState(t, Tunnel.State.DOWN, null) }
-                    .onFailure { Log.e(TAG, "Error stopping tunnel: ${it.message}") }
+            stopping = true
+            try {
+                pollScope?.cancel()
+                pollScope = null
+                activeTunnel?.let { t ->
+                    runCatching { backend?.setState(t, Tunnel.State.DOWN, null) }
+                        .onFailure { Log.e(TAG, "Error stopping tunnel: ${it.message}") }
+                }
+                activeTunnel = null
+                backend = null
+            } finally {
+                stopping = false
             }
-            activeTunnel = null
-            backend = null
             DebugState.latencyMs = -1
             DebugState.latencyFlow.value = -1
             DebugState.txBytes = 0L
             DebugState.rxBytes = 0L
         }
+    }
+
+    /** Bytes received from the peer. Non-zero means a handshake completed. */
+    fun receivedBytes(): Long {
+        val be = backend ?: return 0L
+        val t = activeTunnel ?: return 0L
+        return runCatching { be.getStatistics(t).totalRx() }.getOrDefault(0L)
     }
 
     private suspend fun pollStats(be: GoBackend, tunnel: WgTunnel, peerHost: String?) {
@@ -88,25 +114,14 @@ class WireGuardTunnelManager : TunnelManager {
             ?.groupValues?.get(1)?.toFloatOrNull()?.toInt()
     }.getOrNull()
 
-    private fun parsePeerEndpointHost(configContent: String): String? {
-        for (line in configContent.lines()) {
-            val trimmed = line.trim()
-            if (trimmed.startsWith("Endpoint", ignoreCase = true)) {
-                val value = trimmed.substringAfter("=").trim()
-                return if (value.startsWith("[")) {
-                    value.substringAfter("[").substringBefore("]")
-                } else {
-                    value.substringBeforeLast(":")
-                }
-            }
-        }
-        return null
-    }
-
-    private class WgTunnel(private val name: String) : Tunnel {
+    private class WgTunnel(
+        private val name: String,
+        private val onDown: (WgTunnel) -> Unit
+    ) : Tunnel {
         override fun getName() = name
         override fun onStateChange(newState: Tunnel.State) {
             Log.i(TAG, "WireGuard $name → $newState")
+            if (newState == Tunnel.State.DOWN) onDown(this)
         }
     }
 
