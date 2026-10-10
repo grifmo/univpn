@@ -22,8 +22,8 @@ Android 6.0 or later; the UI is designed for a D-pad remote.
   refreshed automatically.
 - **Any WireGuard config.** Import `.conf` files from any WireGuard provider or your own server.
 - **Web import.** No typing passwords with a remote: open the Profiles screen and UniVPN
-  shows an address (e.g. `http://192.168.1.20:8080`) you can visit from a phone or laptop
-  on the same network to upload configs or enter provider credentials.
+  shows an address (e.g. `http://192.168.1.20:8080`) and a one-time PIN. Visit the address from a
+  phone or laptop on the same network and enter the PIN to upload configs or provider credentials.
 - **Status overlay.** Optional on-screen chip showing the active profile and latency,
   toggleable from the notification.
 - **Survives reboots and standby.** Optional start on boot; routing resumes when the
@@ -93,7 +93,7 @@ On first launch Android asks you to approve UniVPN as a VPN. Accept it.
 
 ## Quick start
 
-1. Open **Profiles**. Add a provider account, or note the web import address and upload a
+1. Open **Profiles**. Add a provider account, or note the web import address and PIN and upload a
    WireGuard `.conf` from another device.
 2. Open **App Routes**, select an app, and pick the profile it should use.
 3. Launch that app. The tunnel switches automatically.

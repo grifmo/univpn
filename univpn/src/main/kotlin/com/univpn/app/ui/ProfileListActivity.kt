@@ -93,7 +93,7 @@ class ProfileListActivity : AppCompatActivity() {
             }
         ).also { it.start() }
 
-        serverUrlText.text = urls.joinToString("\n")
+        serverUrlText.text = urls.joinToString("\n") + "\nPIN: ${importServer?.pin}"
         serverBanner.visibility = View.VISIBLE
     }
 
