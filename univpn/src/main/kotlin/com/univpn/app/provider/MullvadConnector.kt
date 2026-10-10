@@ -129,7 +129,7 @@ class MullvadConnector : VpnProviderConnector {
                 appendLine()
                 appendLine("[Peer]")
                 appendLine("PublicKey = $serverPubKey")
-                appendLine("Endpoint = ${server.hostname}:51820")
+                appendLine("Endpoint = ${MullvadEndpoint.resolvable(server.hostname)}:51820")
                 appendLine("AllowedIPs = 0.0.0.0/0, ::/0")
             }
             Log.i(TAG, "Mullvad config generated for ${server.city}")
