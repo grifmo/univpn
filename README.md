@@ -168,6 +168,6 @@ WireGuard is a registered trademark of Jason A. Donenfeld.
 
 Together, these mean a Mullvad profile can look connected after a week while nothing is protected.
 
-**Workaround:** Download a WireGuard `.conf` from your Mullvad account and import it instead of generating the profile in UniVPN. Imported configs are never refreshed. With any provider, check your IP address after switching apps if it matters.
+**Workaround:** Download a WireGuard `.conf` from your Mullvad account and import it instead of generating the profile in UniVPN. Imported configs are never refreshed. With any provider, check your IP address after switching apps if it matters. The optional overlay is helpful for this - showing as it does the currently selected profile and the external IP address assigned.
 
 Other open issues from a community review (undetected tunnel drops, the 10-second recovery window, the "Default" route disconnecting, and the unauthenticated import server) are tracked for upcoming releases.
