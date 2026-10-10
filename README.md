@@ -134,7 +134,6 @@ UI design notes and the visual design system live in [docs/DESIGN.md](docs/DESIG
 
 ## Roadmap
 
-- Encrypt stored WireGuard private keys (SQLCipher)
 - Certificate pinning for provider APIs
 - More providers (NordVPN connector exists but is disabled; Surfshark)
 - Play Store release

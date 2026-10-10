@@ -1,6 +1,7 @@
 package com.univpn.app.data.db
 
 import android.content.Context
+import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -58,14 +59,17 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
         fun get(context: Context): AppDatabase = instance ?: synchronized(this) {
-            instance ?: Room.databaseBuilder(
-                context.applicationContext,
-                AppDatabase::class.java,
-                "univpn.db"
-            )
-                .addMigrations(MIGRATION_3_4, MIGRATION_4_5)
-                .build()
-                .also { instance = it }
+            instance ?: run {
+                val app = context.applicationContext
+                runCatching { LegacyConfigEncryption.run(app.getDatabasePath(NAME)) }
+                    .onFailure { Log.e("AppDatabase", "Encrypting stored configs failed", it) }
+                Room.databaseBuilder(app, AppDatabase::class.java, NAME)
+                    .addMigrations(MIGRATION_3_4, MIGRATION_4_5)
+                    .build()
+                    .also { instance = it }
+            }
         }
+
+        private const val NAME = "univpn.db"
     }
 }
