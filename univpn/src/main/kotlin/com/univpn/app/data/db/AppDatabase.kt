@@ -48,6 +48,7 @@ abstract class AppDatabase : RoomDatabase() {
                         accountId TEXT NOT NULL,
                         providerId TEXT NOT NULL,
                         serverId TEXT NOT NULL,
+                        serverName TEXT NOT NULL DEFAULT '',
                         serverCountry TEXT NOT NULL,
                         serverCity TEXT NOT NULL,
                         generatedAt INTEGER NOT NULL,
@@ -55,8 +56,18 @@ abstract class AppDatabase : RoomDatabase() {
                         FOREIGN KEY (profileId) REFERENCES vpn_profiles(id) ON DELETE CASCADE
                     )
                 """.trimIndent())
+                // A table created by an earlier build of this migration lacks serverName.
+                val hasServerName = db.query("PRAGMA table_info(generated_profile_meta)").use { c ->
+                    val nameCol = c.getColumnIndex("name")
+                    generateSequence { if (c.moveToNext()) c.getString(nameCol) else null }.any { it == "serverName" }
+                }
+                if (!hasServerName) {
+                    db.execSQL("ALTER TABLE generated_profile_meta ADD COLUMN serverName TEXT NOT NULL DEFAULT ''")
+                }
             }
         }
+
+        internal val MIGRATIONS = arrayOf(MIGRATION_3_4, MIGRATION_4_5)
 
         fun get(context: Context): AppDatabase = instance ?: synchronized(this) {
             instance ?: run {
@@ -64,7 +75,7 @@ abstract class AppDatabase : RoomDatabase() {
                 runCatching { LegacyConfigEncryption.run(app.getDatabasePath(NAME)) }
                     .onFailure { Log.e("AppDatabase", "Encrypting stored configs failed", it) }
                 Room.databaseBuilder(app, AppDatabase::class.java, NAME)
-                    .addMigrations(MIGRATION_3_4, MIGRATION_4_5)
+                    .addMigrations(*MIGRATIONS)
                     .build()
                     .also { instance = it }
             }
