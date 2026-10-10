@@ -3,6 +3,8 @@ package com.univpn.app.server
 import android.text.InputType
 import android.util.Log
 import com.univpn.app.provider.ProviderRegistry
+import com.wireguard.config.BadConfigException
+import com.wireguard.config.Config
 import fi.iki.elonen.NanoHTTPD
 import java.io.File
 
@@ -12,12 +14,37 @@ class ConfigImportServer(
     private val onCredentialsReceived: (providerId: String, username: String, password: String) -> Result<String>
 ) : NanoHTTPD(port) {
 
+    /** One-time PIN shown on the TV next to the address; every write must send it. */
+    private val pinGuard = PinGuard()
+    val pin: String get() = pinGuard.pin
+
+    init {
+        setAsyncRunner(BoundedRunner(MAX_CONNECTIONS))
+    }
+
     override fun serve(session: IHTTPSession): Response = when {
         session.method == Method.GET  && session.uri == "/"            -> serveForm()
         session.method == Method.GET  && session.uri == "/providers"   -> serveProviders()
-        session.method == Method.POST && session.uri == "/upload"      -> handleUpload(session)
-        session.method == Method.POST && session.uri == "/credentials" -> handleCredentials(session)
+        session.method == Method.POST && session.uri == "/upload"      -> checkWrite(session) ?: handleUpload(session)
+        session.method == Method.POST && session.uri == "/credentials" -> checkWrite(session) ?: handleCredentials(session)
         else -> newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "Not found")
+    }
+
+    /** Rejects a write before its body is read: missing/oversized length or a wrong PIN. */
+    private fun checkWrite(session: IHTTPSession): Response? {
+        val length = session.headers["content-length"]?.toLongOrNull()
+            ?: return textResponse(Response.Status.LENGTH_REQUIRED, "Content-Length required")
+        if (length > MAX_BODY_BYTES)
+            return textResponse(Response.Status.PAYLOAD_TOO_LARGE, "Upload too large (max ${MAX_BODY_BYTES / 1024} KB)")
+        return when (pinGuard.check(session.headers[PIN_HEADER])) {
+            PinGuard.Result.OK -> null
+            PinGuard.Result.WRONG -> {
+                Log.w(TAG, "Rejected write with wrong PIN from ${session.remoteIpAddress}")
+                textResponse(Response.Status.FORBIDDEN, "Wrong PIN — enter the PIN shown on the TV")
+            }
+            PinGuard.Result.LOCKED ->
+                textResponse(Response.Status.TOO_MANY_REQUESTS, "Too many wrong PINs — wait a minute and try again")
+        }
     }
 
     private fun serveForm(): Response =
@@ -62,12 +89,16 @@ class ConfigImportServer(
 
             val content = File(tempPath).readText()
 
-            if (!content.contains("[Interface]"))
-                return textResponse(Response.Status.BAD_REQUEST, "Not a valid WireGuard config — missing [Interface] section")
+            try {
+                Config.parse(content.reader().buffered())
+            } catch (e: Exception) {
+                val reason = (e as? BadConfigException)?.let { "${it.reason} in ${it.section} ${it.location}" } ?: e.message
+                return textResponse(Response.Status.BAD_REQUEST, "Not a valid WireGuard config: $reason")
+            }
 
             val rawName = session.parameters["name"]?.firstOrNull()?.trim()
             val filename = session.parameters["filename"]?.firstOrNull() ?: "profile"
-            val name = rawName?.ifEmpty { null } ?: filename.substringBeforeLast(".")
+            val name = (rawName?.ifEmpty { null } ?: filename.substringBeforeLast(".")).take(MAX_NAME_LENGTH)
 
             onConfigReceived(name, content)
                 .fold(
@@ -122,9 +153,37 @@ class ConfigImportServer(
     private fun textResponse(status: Response.Status, msg: String) =
         newFixedLengthResponse(status, MIME_PLAINTEXT, msg)
 
+    /** Serves at most [max] connections at once; extra connections are closed immediately. */
+    private class BoundedRunner(private val max: Int) : AsyncRunner {
+        private val running = mutableListOf<ClientHandler>()
+
+        override fun exec(code: ClientHandler) {
+            synchronized(running) {
+                if (running.size >= max) {
+                    code.close()
+                    return
+                }
+                running.add(code)
+            }
+            Thread(code, "UniVPN import").apply { isDaemon = true }.start()
+        }
+
+        override fun closed(clientHandler: ClientHandler) {
+            synchronized(running) { running.remove(clientHandler) }
+        }
+
+        override fun closeAll() {
+            synchronized(running) { running.toList() }.forEach { it.close() }
+        }
+    }
+
     companion object {
         private const val TAG = "UniVPN_Server"
         const val PORT = 8080
+        private const val PIN_HEADER = "x-univpn-pin"          // NanoHTTPD lower-cases header names
+        private const val MAX_BODY_BYTES = 64 * 1024L          // configs are a few hundred bytes
+        private const val MAX_CONNECTIONS = 4
+        private const val MAX_NAME_LENGTH = 80
 
         private val PAGE_HTML = """
 <!DOCTYPE html>
@@ -161,6 +220,13 @@ class ConfigImportServer(
 
 <div class="card">
   <h1>UniVPN</h1>
+  <p class="sub">Enter the PIN shown on the TV. It changes each time the Profiles screen is opened.</p>
+  <label for="pin" style="margin-top:0">PIN</label>
+  <input type="text" id="pin" inputmode="numeric" maxlength="6" autocomplete="off" placeholder="6-digit PIN">
+</div>
+
+<div class="card">
+  <h1>WireGuard config</h1>
   <p class="sub">Import WireGuard configuration</p>
   <form id="wgForm">
     <label for="n">Profile name <span style="color:#3d4250">(optional — uses filename if blank)</span></label>
@@ -209,7 +275,7 @@ document.getElementById('wgForm').addEventListener('submit',async e=>{
   fd.append('name',document.getElementById('n').value);
   fd.append('filename',fi.files[0].name);
   try{
-    const r=await fetch('/upload',{method:'POST',body:fd});
+    const r=await fetch('/upload',{method:'POST',body:fd,headers:pinHeader()});
     const t=await r.text();
     show(msg,t,r.ok);
     if(r.ok){document.getElementById('wgForm').reset();fname.textContent=''}
@@ -257,13 +323,15 @@ document.getElementById('credForm').addEventListener('submit',async e=>{
   // ensure password field exists even for providers that don't use it
   if(!fd.has('password')) fd.append('password','');
   try{
-    const r=await fetch('/credentials',{method:'POST',body:fd});
+    const r=await fetch('/credentials',{method:'POST',body:fd,headers:pinHeader()});
     const t=await r.text();
     show(msg,t,r.ok);
     if(r.ok) document.getElementById('credForm').reset();
   }catch(err){show(msg,'Network error: '+err.message,false)}
   btn.disabled=false;btn.textContent='Save Account';
 });
+
+function pinHeader(){return {'X-UniVPN-PIN':document.getElementById('pin').value.trim()}}
 
 function show(el,t,ok){el.textContent=t;el.className='msg '+(ok?'ok':'err');el.style.display='block'}
 </script>

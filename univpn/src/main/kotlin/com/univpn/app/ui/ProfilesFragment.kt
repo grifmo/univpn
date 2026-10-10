@@ -136,7 +136,8 @@ class ProfilesFragment : Fragment(R.layout.fragment_profiles),
             }
         ).also { it.start() }
 
-        view.findViewById<TextView>(R.id.serverUrl).text = urls.joinToString("\n")
+        view.findViewById<TextView>(R.id.serverUrl).text =
+            urls.joinToString("\n") + "\nPIN: ${importServer?.pin}"
         view.findViewById<LinearLayout>(R.id.serverBanner).visibility = View.VISIBLE
     }
 
