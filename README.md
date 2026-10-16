@@ -7,7 +7,7 @@ UniVPN switches the WireGuard tunnel whenever that app comes to the foreground. 
 opening a VPN app and changing servers every time you change what you're watching.
 
 Built for and tested on the NVIDIA Shield TV. It targets Android TV devices running
-Android 6.0 or later; the UI is designed for a D-pad remote.
+Android 7.0 or later; the UI is designed for a D-pad remote.
 
 ## Features
 

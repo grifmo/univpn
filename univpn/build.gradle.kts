@@ -32,12 +32,12 @@ val releaseKeystore: String? = providers.environmentVariable("RELEASE_KEYSTORE_P
 
 android {
     namespace = "com.univpn.app"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.univpn.app"
-        minSdk = 23
-        targetSdk = 34
+        minSdk = 24
+        targetSdk = 36
         versionCode = appVersionCode
         versionName = appVersionName
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -74,7 +74,10 @@ android {
             isDebuggable = true
         }
         release {
-            isMinifyEnabled = false
+            // R8 shrinks/obfuscates; its mapping file is bundled in the AAB for Play crash reports.
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             signingConfig = signingConfigs.findByName("release")
         }
     }
